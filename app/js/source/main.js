@@ -3,37 +3,22 @@
 
   var images = ['blastoise', 'charizard', 'electrode', 'gengar', 'mew', 'muk', 'pikachu', 'scyther', 'venasaur', 'zubat'];
 
-  var clock = 60;
+  var capture;
+  var clock;
   var timer;
+  var pair = [];
+
   var clone = images.slice(0);
   for(var i = 0; i < clone.length; i++){
     images.push(clone[i]);
   }
 
-  console.log(images);
-
   $(document).ready(init);
 
   function init(){
     $('#start').click(start);
-    // $('#animate').click(animate);
     $('#game').on('click', 'img', boardClick);
   }
-
-  function boardClick(){
-    var capture = $(this);
-    $(this).toggleClass('hidden');
-    reHide(capture);
-  }
-
-  function reHide(image){
-
-    setTimeout(function(){
-      image.toggleClass('hidden');
-    },500);
-
-  }
-
 
   function createTable(){
     for(var i = 0; i < 4; i++){
@@ -54,8 +39,6 @@
         images[i] = images[j];
         images[j] = temp;
     }
-
-    console.log(images);
     return images;
   }
 
@@ -67,21 +50,56 @@
       var $img = $('<img>');
       var pokemon = images[i];
       $img.attr('src', './media/' + pokemon + '.jpg').addClass('hidden');
-      console.log(pokemon);
-      $($tds[i]).empty();
       $($tds[i]).append($img);
     }
-
   }
 
-
   function start(){
+    $('#game').empty();
     shuffleImages(images);
     createTable();
     srcImages();
+    clearInterval(timer);
     timer = setInterval(countdown, 1000);
     clock = 60;
     countdown();
+  }
+
+  function boardClick(){
+    capture = $(this);
+    console.log(this);
+    $(this).toggleClass('hidden');
+    // reHide(capture);
+    pair.push(this);
+
+    if(pair.length === 2){
+      compare();
+    }
+  }
+
+  function compare(){
+
+    var $first = pair[0];
+    var $second = pair[1];
+
+    var src1 = $($first).attr('src');
+    var src2 = $($second).attr('src');
+
+    if(src1 === src2){
+      $($first).addClass('frozen');
+      $($second).addClass('frozen');
+
+      $('img.frozen').off('click');
+      //$($second).off('click');
+
+    } else {
+      setTimeout(function(){
+        $($first).toggleClass('hidden');
+        $($second).toggleClass('hidden');
+      },500);
+    }
+
+    pair = [];
   }
 
   function countdown(){
@@ -89,12 +107,27 @@
     $('#countdown').text(clock);
     if (clock <= 0){
      clearInterval(timer);
-     $('#game').empty();
      $('#warning').addClass('hidepoke');
+     results();
      return;
     }
 
-    if(clock<=10){
+    warning();
+  }
+
+  function results(){
+    var matches = $('.frozen').length;
+    console.log(matches);
+
+    if(matches === 20){
+      alert('winner');
+    } else {
+      alert('LOSER');
+    }
+  }
+
+  function warning(){
+    if(clock === 10){
       $('#warning').removeClass('hidepoke');
       setInterval(function () {
         $('#warning').css('background-color', function () {
@@ -102,14 +135,9 @@
           return this.switch ? '#000' : '';
         });
       }, 200);
+      $('#countdown').css('color', 'red');
     }
+
   }
-
-
-  // function animate(){
-  //   $('.flipper').toggleClass('rotate');
-  // }
-
-
 
 })();
