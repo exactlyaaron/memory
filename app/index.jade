@@ -2,10 +2,29 @@ doctype html
 html(lang='en')
   head
     meta(charset='utf-8')
-    title Client Template
+    title Memory Game
     link(rel='stylesheet', href='./css/app.css')
   body
-    h1 Client Template
+    #warning.hidepoke HURRY IT UP!!!
+      #slowpoke
+        img.slowpoke(src="./media/slowpoke.png")
+    #container
+      img.pokeball(src='./media/pokeball.png')
+      h1 Memory Game
+      button#start Find 'Em All!
+      .clear
+
+      h3 Timer
+      #countdown
+
+      table#game
+
+      // button#animate Animate
+
+      //- .container
+      //-   .flipper
+      //-     .front A
+      //-     .back B
 
     script(src='./js/vendor/jquery-2.1.0.js')
     script(src='./js/source/main.js')
