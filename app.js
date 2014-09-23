@@ -1,6 +1,7 @@
 var http = require('http');
 var connect = require('connect');
 var directory = 'public';
+var logger = require('morgan');
 var port = process.env.PORT;
 
 var app = connect()
